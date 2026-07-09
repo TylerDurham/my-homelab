@@ -17,6 +17,10 @@ if [ ! -f "$SETTINGS" ]; then
   sleep 5
 fi
 
+echo "Fixing permissions (searxng's container writes these as uid 977, so your"
+echo "user can't edit them without this)..."
+sudo chown -R "$(id -u):$(id -g)" ./searxng
+
 SECRET=$(openssl rand -hex 16)
 
 echo "Enabling JSON output format..."
@@ -46,6 +50,9 @@ fi
 
 echo "Setting a random secret key..."
 sed -i.bak "s/secret_key: \".*\"/secret_key: \"$SECRET\"/" "$SETTINGS"
+
+echo "Making sure the container's uid (977) can still read these files..."
+chmod -R a+rX ./searxng
 
 echo "Restarting searxng to apply changes..."
 docker compose restart searxng
