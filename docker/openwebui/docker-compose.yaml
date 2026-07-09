@@ -21,7 +21,7 @@ services:
     volumes:
       - ./searxng:/etc/searxng
     environment:
-      - SEARXNG_BASE_URL=http://searxng:8080/
+      - SEARXNG_BASE_URL=https://search.snork.co/
       - UWSGI_WORKERS=2
       - UWSGI_THREADS=4
 
