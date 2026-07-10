@@ -5,7 +5,7 @@ services:
     ports:
       - "3000:8080"
     environment:
-      - OLLAMA_BASE_URL=http://glamdring.snork.co:11500
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
     volumes:
       - open-webui:/app/backend/data
     extra_hosts:
@@ -21,7 +21,7 @@ services:
     volumes:
       - ./searxng:/etc/searxng
     environment:
-      - SEARXNG_BASE_URL=https://search.snork.co/
+      - SEARXNG_BASE_URL=${SEARXNG_BASE_URL}
       - UWSGI_WORKERS=2
       - UWSGI_THREADS=4
 
