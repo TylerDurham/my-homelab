@@ -1,0 +1,90 @@
+{
+	email {$ACME_EMAIL}
+}
+
+# Every site here is LAN-only, so ACME must prove ownership via a DNS TXT
+# record instead of an inbound HTTP request. The resolvers line points the
+# propagation check at public DNS — without it Caddy asks the gateway, which
+# answers from the split-horizon view and never sees the TXT record.
+(tls_dns) {
+	tls {
+		dns cloudflare {env.CF_API_TOKEN}
+		resolvers 1.1.1.1 9.9.9.9
+	}
+}
+
+# Shared hardening for anything with a login form behind it.
+(secure_headers) {
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}
+
+# One wildcard cert covers every subhost, so adding a service is a new `handle`
+# block plus a LAN DNS record — no extra certificate, no ACME round trip.
+#
+# The wildcard matches exactly one label: chat.snork.co is covered,
+# a.b.snork.co is not. The bare apex isn't covered either — see README.
+*.{$CADDY_DOMAIN} {
+	import tls_dns
+
+	# TEMPORARY — diagnosing the UniFi console hang. Remove once resolved.
+	log {
+		output stdout
+		format json
+	}
+
+	@home host home.{$CADDY_DOMAIN}
+	handle @home {
+		import secure_headers
+		reverse_proxy homepage:3000
+	}
+
+	@calibre host calibre.{$CADDY_DOMAIN}
+	handle @calibre {
+		import secure_headers
+		# Open WebUI streams tokens over SSE and websockets; no buffering.
+		reverse_proxy 10.0.0.7:8083 {
+			flush_interval -1
+		}
+	}
+
+	@admin host admin.{$CADDY_DOMAIN}
+	handle @admin {
+		import secure_headers
+		# The UniFi console only serves HTTPS, and the scheme has to be spelled
+		# out — Caddy speaks plaintext to port 443 otherwise and UniFi answers
+		# 400. Its cert is self-signed (CN=unifi.local) so it can't be verified;
+		# this hop never leaves the LAN.
+		reverse_proxy https://{$UNIFI_HOST} {
+			transport http {
+				tls_insecure_skip_verify
+				# UniFi offers h2 over ALPN, and Caddy would take it — but the
+				# console's live data rides WebSockets, which can't upgrade over
+				# HTTP/2. Without this the UI loads and then hangs on a spinner
+				# while /api/ws/system returns 500.
+				versions 1.1
+			}
+		}
+	}
+
+	@plex host plex.{$CADDY_DOMAIN}
+	handle @plex {
+		# No secure_headers: Plex serves its own and is picky about framing.
+		# Plex is network_mode: host, so it's reached by LAN IP, not container name.
+		reverse_proxy {$PLEX_HOST}:32400 {
+			# Plex streams large ranges; let it manage its own timeouts.
+			flush_interval -1
+		}
+	}
+
+	# A hostname that resolves here but has no block above lands here, rather
+	# than being silently proxied to whichever service Caddy matched first.
+	handle {
+		respond "No homelab service is bound to {host}" 404
+	}
+}

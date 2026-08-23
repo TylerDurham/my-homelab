@@ -1,0 +1,30 @@
+services:
+  caddy:
+    build: .
+    image: homelab/caddy:latest
+    container_name: caddy
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    environment:
+      - ACME_EMAIL=${ACME_EMAIL}
+      - CADDY_DOMAIN=${CADDY_DOMAIN}
+      - CF_API_TOKEN=${CF_API_TOKEN}
+      - PLEX_HOST=${PLEX_HOST}
+      - UNIFI_HOST=${UNIFI_HOST}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data # certs + ACME account key — do not lose this
+      - caddy_config:/config
+    networks:
+      - homelab
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  homelab:
+    external: true
