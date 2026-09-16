@@ -1,0 +1,45 @@
+- Tools:
+    - ChatLLM Teams:
+       - href: https://apps.abacus.ai/chatllm/
+         description: ChatLLM for Teams
+         icon: https://raw.githubusercontent.com/TylerDurham/app-icons/refs/heads/master/48x48/ChatLLMTeams.png
+    - Claude.AI:
+       - href: https://claude.ai
+         description: Claude AI
+         icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/claude.png
+- Social:
+    - X:
+        - href: https://x.com
+          description: X (Twitter)
+          icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/x.png
+    - LinkedIn:
+        - href: https://linkedin.com
+          description: LinkedIn
+          icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/linkedin.png
+    - Facebook:
+        - href: https://facebook.com
+          description: Facebook
+          icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/facebook.png
+
+- Homelab:
+    - Karakeep:
+        - href: https://karakeep.snork.co
+          description: Bookmark manager
+          icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/karakeep.png
+    - Gitea:
+        - href: https://gitea.snork.co
+          description: Self-hosted Git
+          icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gitea.png
+    - Plex:
+        - href: https://plex.snork.co
+          description: Media server
+          icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/plex.png
+    - Homepage:
+        - href: https://home.snork.co
+          description: Dashboard
+          icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png
+    - Calibre:
+        - href: https://calibre.snork.co
+          description: Ebook library
+          icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/calibre.png
+
