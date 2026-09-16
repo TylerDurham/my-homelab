@@ -38,10 +38,34 @@
 		format json
 	}
 
-	@home host home.{$CADDY_DOMAIN}
-	handle @home {
+	@karakeep host karakeep.{$CADDY_DOMAIN}
+	handle @karakeep {
 		import secure_headers
-		reverse_proxy homepage:3000
+		reverse_proxy 10.0.0.7:8002
+	}
+
+	@drawdb host drawdb.{$CADDY_DOMAIN}
+	handle @drawdb {
+		import secure_headers
+		reverse_proxy 10.0.0.7:8003
+	}
+
+	@homepage host home.{$CADDY_DOMAIN}
+	handle @homepage {
+		import secure_headers
+
+		reverse_proxy homepage:3000 {
+			flush_interval -1
+		}
+	}
+
+	@ollama host ollama.{$CADDY_DOMAIN}
+	handle @ollama {
+		import secure_headers
+		# Open WebUI streams tokens over SSE and websockets; no buffering.
+		reverse_proxy 10.0.0.9:11500 {
+
+		}
 	}
 
 	@calibre host calibre.{$CADDY_DOMAIN}
