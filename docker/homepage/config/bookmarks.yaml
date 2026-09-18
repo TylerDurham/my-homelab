@@ -7,7 +7,7 @@
     - ChatLLM Teams:
         - href: https://apps.abacus.ai/chatllm/
           description: ChatLLM for Teams
-          icon: https://github.com/TylerDurham/app-icons/blobs/master/48x48/ChatLLMTeams.png?raw=true
+          icon: https://github.com/TylerDurham/app-icons/blob/master/apps/services/abacus_ai.png?raw=true
     - Claude.AI:
         - href: https://claude.ai
           description: Claude AI
