@@ -1,17 +1,30 @@
 ---
-- Tools:
-    - Github:
-        - href: https://github.com/TylerDurham
-          icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/github.png?raw=true
-          description: Github.com
+- AI:
     - ChatLLM Teams:
         - href: https://apps.abacus.ai/chatllm/
           description: ChatLLM for Teams
-          icon: https://github.com/TylerDurham/app-icons/blob/master/apps/services/abacus_ai.png?raw=true
+          icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/abacus_ai.png?raw=true
     - Claude.AI:
         - href: https://claude.ai
           description: Claude AI
           icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/claude.png?raw=true
+    - Grok:
+        - href: https://grok.com
+          description: Claude AI
+          icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/claude.png?raw=true
+- Tools:
+    - Github:
+        - href: https://github.com/TylerDurham
+          icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/github-light.png?raw=true
+          description: Github.com
+    - Dashboard Icons:
+        - href: https://dashboardicons.com/
+          description: Dashboard Icons
+          icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/dashboard-icons.png?raw=true
+    - Dropbox:
+        - href: https://dropbox.com/
+          description: Dropbox Files
+          icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/dropbox.png?raw=true
     - Mail:
         - href: https://mail.hostinger.com
           description: Hostinger email
