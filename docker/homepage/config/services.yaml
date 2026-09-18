@@ -1,0 +1,32 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/services/
+
+- Homelab:
+    - UniFi:
+        href: https://192.168.1.1
+        icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/ubiquiti-unifi.png?raw=true
+    - Synology DSM:
+        href:
+        icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/synology-dsm.png?raw=true
+    -  Plex:
+        href: https://plex.snork.co
+        icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/plex.png?raw=true
+    - ProxMox:
+        href: https://proxmox.snork.co
+        icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/proxmox.png?raw=true 
+
+- AI:
+    - ChatLLM Teams:
+         href: https://apps.abacus.ai/chatllm/
+         description: ChatLLM for Teams
+         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/abacus_ai.png?raw=true
+    - Claude.AI:
+         href: https://claude.ai
+         description: Claude AI
+         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/claude.png?raw=true
+    - Grok:
+         href: https://grok.com
+         description: Claude AI
+         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/grok-dark.png?raw=true
+
