@@ -1,0 +1,9 @@
+---
+# pve:
+#   url: https://proxmox.host.or.ip:8006
+#   token: username@pam!Token ID
+#   secret: secret
+rivendell: # must match your actual Proxmox node name
+  url: https://proxmox.snork.co
+  token: root@pam!homepage
+  secret: {{HOMEPAGE_VAR_PROXMOX_TOKEN_SECRET}}

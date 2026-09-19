@@ -1,0 +1,17 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/info-widgets/
+
+- resources:
+    cpu: true
+    memory: true
+    disk: /
+
+- search:
+    provider: duckduckgo
+    target: _blank
+
+- unifi_console:
+    url: "{{HOMEPAGE_VAR_UNIFI_URL}}"
+    site: UCG Fiber Home # optional
+    key: "{{HOMEPAGE_VAR_UNIFI_API_KEY}}"

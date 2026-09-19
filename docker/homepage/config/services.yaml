@@ -1,10 +1,9 @@
 ---
 # For configuration options and examples, please see:
 # https://gethomepage.dev/configs/services/
-
 - Homelab:
     - UniFi:
-        href: https://192.168.1.1
+        href: "{{HOMEPAGE_VAR_UNIFI_URL}}"
         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/ubiquiti-unifi.png?raw=true
     - Synology DSM:
         href:
@@ -30,3 +29,22 @@
          description: Claude AI
          icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/grok-dark.png?raw=true
 
+- Infrastructure:
+    - UniFi Network:
+        icon: unifi.svg
+        href: "{{HOMEPAGE_VAR_UNIFI_URL}}"
+        description: UniFi Controller
+        widget:
+          type: unifi
+          url: "{{HOMEPAGE_VAR_UNIFI_URL}}"
+          key: "{{HOMEPAGE_VAR_UNIFI_API_KEY}}"
+          fields: ["uptime", "wan", "wlan_users", "lan_users"] # Optional, max 4
+    - Proxmox:
+        icon: proxmox.png
+        href: "{{HOMEPAGE_VAR_PROXMOX_URL}}"
+        widget:
+          type: proxmox
+          node: "{{HOMEPAGE_VAR_PROXMOX_NODE}}"
+          url: "{{HOMEPAGE_VAR_PROXMOX_URL}}"
+          username: "{{HOMEPAGE_VAR_PROXMOX_USERNAME}}"
+          password: "{{HOMEPAGE_VAR_PROXMOX_PASSWORD}}"
