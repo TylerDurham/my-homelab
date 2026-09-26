@@ -6,7 +6,7 @@
         href: "{{HOMEPAGE_VAR_UNIFI_URL}}"
         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/ubiquiti-unifi.png?raw=true
     - TrueNAS:
-        href: https://192.168.1.22
+        href: https://truenas.snork.co
         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/truenas-scale.png?raw=true
     - Immich:
         href: http://immich.snork.co
