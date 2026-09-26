@@ -9,7 +9,7 @@
         href: https://192.168.1.22
         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/truenas-scale.png?raw=true
     - Immich:
-        href: http://192.168.1.22:30041
+        href: http://immich.snork.co
         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/immich.png?raw=true
     - Synology DSM:
         href: https://shire.snork.co
