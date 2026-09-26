@@ -56,6 +56,17 @@
 		reverse_proxy {$DRAWDB_IP}:8003
 	}
 
+  @truenas host {$TRUENAS_HOST}
+	handle @truenas {
+		redir / /ui/ 302
+		reverse_proxy https://{$TRUENAS_IP}:443 {
+			header_down Location https://{$TRUENAS_IP}:443 https://{$TRUENAS_HOST}
+			transport http {
+				tls_insecure_skip_verify
+			}
+		}
+	}
+
 	@immich host {$IMMICH_HOST}
 	handle @immich {
 		reverse_proxy {$IMMICH_IP}:30041 {
