@@ -38,69 +38,106 @@
 		format json
 	}
 
-	@karakeep host karakeep.{$CADDY_DOMAIN}
+	@karakeep host {$KARAKEEP_HOST}
 	handle @karakeep {
 		import secure_headers
-		reverse_proxy 10.0.0.7:8002
+		reverse_proxy {$KARAKEEP_IP}:8002
 	}
 
-	@drawdb host drawdb.{$CADDY_DOMAIN}
+	@gitea host {$GITEA_HOST}
+	handle @gitea {
+		import secure_headers
+		reverse_proxy {$GITEA_IP}:8081
+	}
+
+	@drawdb host {$DRAWDB_HOST}
 	handle @drawdb {
 		import secure_headers
-		reverse_proxy 10.0.0.7:8003
+		reverse_proxy {$DRAWDB_IP}:8003
 	}
 
-	@homepage host home.{$CADDY_DOMAIN}
+	@immich host {$IMMICH_HOST}
+	handle @immich {
+		reverse_proxy {$IMMICH_IP}:30041 {
+        transport http {
+            read_timeout 600s
+        }
+    }
+    request_body {
+        max_size 50GB
+    }
+	}
+
+	@homepage host {$HOMEPAGE_HOST}
 	handle @homepage {
 		import secure_headers
 
-		reverse_proxy homepage:3000 {
+		reverse_proxy {$HOMEPAGE_IP}:3000 {
 			flush_interval -1
 		}
 	}
 
-	@ollama host ollama.{$CADDY_DOMAIN}
+	@ollama host {$OLLAMA_HOST}
 	handle @ollama {
 		import secure_headers
 		# Open WebUI streams tokens over SSE and websockets; no buffering.
-		reverse_proxy 10.0.0.9:11500 {
+		reverse_proxy {$OLLAMA_IP}:11434 {
 
 		}
 	}
 
-	@calibre host calibre.{$CADDY_DOMAIN}
+	@proxmox host {$PROXMOX_HOST}
+  handle @proxmox {
+    import secure_headers
+
+    reverse_proxy https://{$PROXMOX_IP}:8006 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+  }
+
+	@calibre host {$CALIBRE_HOST}
 	handle @calibre {
 		import secure_headers
 		# Open WebUI streams tokens over SSE and websockets; no buffering.
-		reverse_proxy 10.0.0.7:8083 {
+		reverse_proxy {$CALIBRE_IP}:8083 {
 			flush_interval -1
 		}
 	}
 
-	@admin host admin.{$CADDY_DOMAIN}
+	@admin host {$UNIFI_HOST}
 	handle @admin {
 		import secure_headers
 		# The UniFi console only serves HTTPS, and the scheme has to be spelled
 		# out — Caddy speaks plaintext to port 443 otherwise and UniFi answers
 		# 400. Its cert is self-signed (CN=unifi.local) so it can't be verified;
 		# this hop never leaves the LAN.
-		reverse_proxy https://{$UNIFI_HOST} {
+		reverse_proxy https://192.168.1.1 {
 			transport http {
 				tls_insecure_skip_verify
+
 				# UniFi offers h2 over ALPN, and Caddy would take it — but the
 				# console's live data rides WebSockets, which can't upgrade over
 				# HTTP/2. Without this the UI loads and then hangs on a spinner
 				# while /api/ws/system returns 500.
-				versions 1.1
+				versions 1.1 
 			}
+
+      flush_interval -1
+
+      # header_up Host {upstream_hostport}
+      # header_up X-Real-IP {remote_host}
+      # header_up X-Forwarded-For {remote_host}
+      # header_up X-Forwarded-Proto {scheme}
 		}
 	}
 
-	@plex host plex.{$CADDY_DOMAIN}
+	@plex host {$PLEX_HOST}
 	handle @plex {
 		# No secure_headers: Plex serves its own and is picky about framing.
 		# Plex is network_mode: host, so it's reached by LAN IP, not container name.
-		reverse_proxy {$PLEX_HOST}:32400 {
+		reverse_proxy {$PLEX_IP}:32400 {
 			# Plex streams large ranges; let it manage its own timeouts.
 			flush_interval -1
 		}
