@@ -5,8 +5,14 @@
     - UniFi:
         href: "{{HOMEPAGE_VAR_UNIFI_URL}}"
         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/ubiquiti-unifi.png?raw=true
+    - TrueNAS:
+        href: https://192.168.1.22
+        icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/truenas-scale.png?raw=true
+    - Immich:
+        href: http://192.168.1.22:30041
+        icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/immich.png?raw=true
     - Synology DSM:
-        href:
+        href: https://shire.snork.co
         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/synology-dsm.png?raw=true
     -  Plex:
         href: https://plex.snork.co
