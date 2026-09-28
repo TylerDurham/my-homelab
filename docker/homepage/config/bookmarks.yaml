@@ -37,10 +37,18 @@
           description: Claude AI
           icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/claude.png?raw=true
 - Homelab:
+    - NextCloud:
+        - href: https://nextcloud.snork.co
+          description: Productivity 
+          icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/nextcloud.png?raw=true 
     - ProxMox:
         - href: https://proxmox.snork.co
           description: Virtualization 
           icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/proxmox.png?raw=true 
+    - Nginx Proxy Manager:
+        - href: https://nginx.snork.co
+          description: Reverse Proxy 
+          icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/nginx-proxy-manager.png?raw=true 
     - Karakeep:
         - href: https://karakeep.snork.co
           description: Bookmark manager
