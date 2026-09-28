@@ -1,20 +1,23 @@
 ---
 # For configuration options and examples, please see:
 # https://gethomepage.dev/configs/services/
-- Homelab:
+- Homelab Management:
     - UniFi:
         href: "{{HOMEPAGE_VAR_UNIFI_URL}}"
         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/ubiquiti-unifi.png?raw=true
     - TrueNAS:
         href: https://truenas.snork.co
         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/truenas-scale.png?raw=true
-    - Immich:
-        href: http://immich.snork.co
+    - KVM (TrueNAS on Gondor):
+        href: https://kvm-truenas.snork.co
+        icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/glinet-dark.png?raw=true
+    - Immich (Admin):
+        href: https://immich.snork.co/admin/system-settings 
         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/immich.png?raw=true
     - Synology DSM:
         href: https://shire.snork.co
         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/synology-dsm.png?raw=true
-    -  Plex:
+    - Plex:
         href: https://plex.snork.co
         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/plex.png?raw=true
     - ProxMox:
