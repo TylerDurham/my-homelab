@@ -8,9 +8,13 @@
     disk: /
 
 - search:
-    provider: duckduckgo
+    provider: custom
+    url: https://search.snork.co/search?q=
     target: _blank
-
+    focus: true                          # optional: cursor lands in the search bar on load
+    suggestionUrl: https://search.snork.co/autocompleter?q=
+    showSearchSuggestions: true
+    
 - unifi_console:
     url: "{{HOMEPAGE_VAR_UNIFI_URL}}"
     site: UCG Fiber Home # optional

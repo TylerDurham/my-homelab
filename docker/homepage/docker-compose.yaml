@@ -1,15 +1,16 @@
----
 services:
   homepage:
-    image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage
-    ports: [3000:3000]
+    image: ghcr.io/gethomepage/homepage:latest
+    env_file: .env
+    networks:
+      - homelab
+    ports:
+      - "3000:3000"
     volumes:
-      - ./config:/app/config  # Make sure your local config directory exists
-      - /var/run/docker.sock:/var/run/docker.sock:ro  # (optional) For docker integrations
-    environment:
-      env_file: .env
-    networks: [homelab]
+      - /docker/homepage/config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
 networks:
   homelab:
     external: true
