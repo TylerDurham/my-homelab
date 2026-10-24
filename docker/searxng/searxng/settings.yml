@@ -1,0 +1,9 @@
+use_default_settings: true
+server:
+  secret_key: "REPLACE_ME"   # openssl rand -hex 32
+  limiter: false             # LAN-only; the limiter also needs Valkey
+  public_instance: false
+search:
+  formats:
+    - html
+    - json                   # required — agents use the JSON API
