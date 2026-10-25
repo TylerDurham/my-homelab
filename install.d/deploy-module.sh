@@ -38,7 +38,5 @@ fi
 
 info "Deploying module '$module_name' to '$host_name'"
 
-#scp -r "$module_path" "$host_name:/docker"
-
-rsync -avn --exclude='.env' --exclude='.env.*' "$module_path" "$host_name:/docker"
+rsync -av --exclude='.env' --exclude='.env.*' "$module_path" "$host_name:/docker"
 
