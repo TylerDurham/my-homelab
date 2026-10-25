@@ -7,14 +7,25 @@ services:
     # tini as PID 1 so `docker compose down` stops the whole pipeline cleanly
     init: true
 
-    env_file:
-      - .env
     environment:
       # HTTP transport is pinned here so a .env typo can't drop it back to stdio.
       # 0.0.0.0 is required in Docker — the server defaults to 127.0.0.1.
       MCP_HTTP_HOST: "0.0.0.0"
       MCP_HTTP_PORT: "3000"
       TINI_KILL_PROCESS_GROUP: "1"
+      SEARXNG_URL: ${SEARXNG_URL:?not set — run via op}
+      SEARXNG_MCP_URL: ${SEARXNG_MCP_URL:?not set - run via op}
+      SEARXNG_MCP_TOKEN: ${SEARXNG_MCP_TOKEN:?not set - run via op}
+
+      # Hardened mode: bearer-token auth + Host/Origin checks. These four
+      # must be set together. Keys on the left are the names the server
+      # reads (MCP_HTTP_*) — don't rename them; values come from op.
+      MCP_HTTP_HARDEN: "true"
+      MCP_HTTP_ALLOWED_ORIGINS: ${SEARXNG_MCP_HTTP_ALLOWED_ORIGINS:?not set - run via op}
+      MCP_HTTP_AUTH_TOKEN: ${SEARXNG_MCP_HTTP_AUTH_TOKEN:?not set - run via op}
+      # Matched exactly against Host (port included). Include loopback
+      # (127.0.0.1:3000,localhost:3000) so the in-container healthcheck passes.
+      MCP_HTTP_ALLOWED_HOSTS: ${SEARXNG_MCP_HTTP_ALLOWED_HOSTS:?not set - run via op}
 
     # The server only logs to stdout/stderr. Wrapping it in tee keeps
     # `docker logs` working AND appends everything to ./logs on the host.
@@ -27,8 +38,8 @@ services:
 
     # Optional: only needed for direct LAN access. If you only go through
     # Caddy on the homelab network, you can drop this block.
-    ports:
-      - "${MCP_PUBLISH_PORT:-8004}:3000"
+    # ports:
+    #   - "${MCP_PUBLISH_PORT:-8004}:3000"
 
     healthcheck:
       # Token is sent in case hardened mode also guards /health; harmless if not.
