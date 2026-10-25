@@ -1,0 +1,73 @@
+services:
+  mcp-searxng:
+    image: isokoliuk/mcp-searxng:latest
+    container_name: mcp-searxng
+    restart: unless-stopped
+
+    # tini as PID 1 so `docker compose down` stops the whole pipeline cleanly
+    init: true
+
+    env_file:
+      - .env
+    environment:
+      # HTTP transport is pinned here so a .env typo can't drop it back to stdio.
+      # 0.0.0.0 is required in Docker — the server defaults to 127.0.0.1.
+      MCP_HTTP_HOST: "0.0.0.0"
+      MCP_HTTP_PORT: "3000"
+      TINI_KILL_PROCESS_GROUP: "1"
+
+    # The server only logs to stdout/stderr. Wrapping it in tee keeps
+    # `docker logs` working AND appends everything to ./logs on the host.
+    # (WORKDIR in the image is /app, so the relative path resolves.)
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["node dist/cli.js 2>&1 | tee -a /logs/mcp-searxng.log"]
+
+    volumes:
+      - ./logs:/logs # create this first and chown to 1000 — the image runs as UID 1000
+
+    # Optional: only needed for direct LAN access. If you only go through
+    # Caddy on the homelab network, you can drop this block.
+    ports:
+      - "${MCP_PUBLISH_PORT:-8004}:3000"
+
+    healthcheck:
+      # Token is sent in case hardened mode also guards /health; harmless if not.
+      test:
+        [
+          "CMD-SHELL",
+          "wget -qO- --header \"Authorization: Bearer $$MCP_HTTP_AUTH_TOKEN\" http://127.0.0.1:3000/health >/dev/null || exit 1",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+    # Light hardening — the process needs nothing beyond /logs and a scratch /tmp.
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+    # Upstream's "small/balanced" profile for 1–4 clients.
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 384M
+
+    # Rotate the `docker logs` copy; ./logs/mcp-searxng.log is yours to rotate.
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
