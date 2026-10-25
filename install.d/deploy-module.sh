@@ -38,5 +38,5 @@ fi
 
 info "Deploying module '$module_name' to '$host_name'"
 
-rsync -av --exclude='.env' --exclude='.env.*' "$module_path" "$host_name:/docker"
+rsync -av --exclude='README.md' --exclude='.env' --exclude='*.env' --exclude='test*' "$module_path" "$host_name:/docker"
 
