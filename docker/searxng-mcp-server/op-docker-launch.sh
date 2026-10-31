@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # CHANGE TO APPROPRIATE OP ENV ID!
-readonly OP_ENV_ID=hb2vbcnlwp5nnkejcxbzwbaavm=
+readonly OP_ENV_ID=hb2vbcnlwp5nnkejcxbzwbaavm
 
 # Load the token file so we can connect as the service account
 token_file="/etc/op/$OP_ENV_ID.token"
