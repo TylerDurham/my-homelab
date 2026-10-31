@@ -1,0 +1,81 @@
+services:
+  gitea:
+    # :1 tracks the latest stable 1.x release. Pin a minor (e.g. :1.25) if you
+    # want to choose when feature upgrades happen.
+    image: docker.gitea.com/gitea:1
+    container_name: gitea
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+
+      # ── Database ──────────────────────────────────────────────────────────
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=db:5432
+      - GITEA__database__NAME=${POSTGRES_DB}
+      - GITEA__database__USER=${POSTGRES_USER}
+      - GITEA__database__PASSWD=${POSTGRES_PASSWORD}
+
+      # ── Server / URLs ─────────────────────────────────────────────────────
+      # ROOT_URL must be the exact external HTTPS URL. The container registry
+      # builds its auth realm from it, so a wrong value breaks `docker login`.
+      - GITEA__server__DOMAIN=${GITEA_DOMAIN}
+      - GITEA__server__ROOT_URL=https://${GITEA_DOMAIN}/
+      - GITEA__server__SSH_DOMAIN=${GITEA_SSH_DOMAIN}
+      - GITEA__server__SSH_PORT=${GITEA_SSH_PORT}
+      - GITEA__server__SSH_LISTEN_PORT=22
+      - GITEA__server__LFS_START_SERVER=true
+
+      # ── Packages / container registry ─────────────────────────────────────
+      # On by default in current Gitea; set explicitly so it's obvious.
+      # Images live at ${GITEA_DOMAIN}/<owner>/<image>:<tag>
+      - GITEA__packages__ENABLED=true
+
+      # ── Sensible homelab defaults ─────────────────────────────────────────
+      - GITEA__service__DISABLE_REGISTRATION=true
+      - GITEA__service__REQUIRE_SIGNIN_VIEW=true
+      - GITEA__repository__DEFAULT_PRIVATE=private
+      - GITEA__log__LEVEL=Info
+    volumes:
+      - ./data:/data            # repos, LFS, packages/registry blobs, app.ini
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "${GITEA_HTTP_PORT}:3000"   # web + registry (proxied)
+      - "${GITEA_SSH_PORT}:22"      # git over SSH (direct, not proxied)
+    networks:
+      - homelab
+      - gitea_internal
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:3000/api/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  db:
+    image: postgres:17-alpine
+    container_name: gitea-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    networks:
+      - gitea_internal     # not on homelab — only Gitea can reach it
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  homelab:
+    external: true
+  gitea_internal:
+    internal: true
