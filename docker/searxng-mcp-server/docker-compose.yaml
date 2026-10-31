@@ -1,0 +1,29 @@
+services:
+  searxng-mcp:
+    build: .
+    image: searxng-mcp
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+
+    # Override any local-dev values from .env; the container always serves HTTP.
+    environment:
+      MCP_TRANSPORT: http
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: 8000
+      # Taken from the shell or .env; otherwise a 1Password reference that
+      # `op run` resolves (see `just serve-docker`).
+      SEARXNG_URL: ${SEARXNG_URL:?not set - run via op}
+    # Bound to localhost because the endpoint has no authentication.
+    # Put a protected reverse proxy in front before exposing it further.
+    ports:
+      - "127.0.0.1:8000:8000"
+    # Uncomment to use network
+    networks:
+      - homelab
+
+# Uncomment to use network
+networks:
+  homelab:
+    external: true

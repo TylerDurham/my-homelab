@@ -1,0 +1,60 @@
+services:
+  open-webui:
+    # :main tracks the latest release. Pin a version tag (e.g. :v0.6.x) if you
+    # want to choose when upgrades happen — releases often run DB migrations.
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    restart: unless-stopped
+    environment:
+      # ── Core ──────────────────────────────────────────────────────────────
+      # WEBUI_URL must be the exact external HTTPS URL (used for OAuth
+      # callbacks and links). The secret signs session JWTs; without a fixed
+      # value every recreate logs everyone out.
+      - WEBUI_URL=${WEBUI_URL}
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY:?not set}
+
+      # ── Model backends ────────────────────────────────────────────────────
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:?not set - e.g. http://host.docker.internal:11434}
+      # llama.cpp's llama-server speaks the OpenAI API. The key only matters
+      # if llama-server was started with --api-key, but must be non-empty.
+      - ENABLE_OPENAI_API=true
+      - OPENAI_API_BASE_URL=${LLAMACPP_BASE_URL:?not set - e.g. http://host.docker.internal:8080/v1}
+      - OPENAI_API_KEY=${LLAMACPP_API_KEY:-none}
+
+      # ── Web search via the searxng stack (docker/searxng) ─────────────────
+      # SEARXNG_HOST is host[:port] only; scheme and path are fixed here.
+      # SearXNG must have the json format enabled in settings.yml.
+      - ENABLE_WEB_SEARCH=true
+      - WEB_SEARCH_ENGINE=searxng
+      - SEARXNG_QUERY_URL=http://${SEARXNG_HOST:?not set - e.g. searxng:8080}/search?q=<query>
+
+      # ── Sensible homelab defaults ─────────────────────────────────────────
+      # NOTE: most settings are "PersistentConfig" — read from env on first
+      # launch only, then stored in the DB. Change them in Admin > Settings
+      # afterwards, or set ENABLE_PERSISTENT_CONFIG=false to force env values.
+      - DEFAULT_USER_ROLE=pending   # new signups need admin approval
+      - ENABLE_COMMUNITY_SHARING=false
+      - ANONYMIZED_TELEMETRY=false
+      - SCARF_NO_ANALYTICS=true
+      - DO_NOT_TRACK=true
+    volumes:
+      - ./data:/app/backend/data   # webui.db, uploads, vector DB, cache
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "${WEBUI_HTTP_PORT}:8080"  # proxied by Caddy
+    extra_hosts:
+      # Lets OLLAMA_BASE_URL point at an Ollama running on the Docker host.
+      - host.docker.internal:host-gateway
+    networks:
+      - homelab
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s   # first boot downloads embedding models
+
+networks:
+  homelab:
+    external: true
