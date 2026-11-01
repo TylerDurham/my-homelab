@@ -54,7 +54,7 @@
           description: Bookmark manager
           icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/karakeep.png?raw=true
     - Gitea:
-        - href: https://gitea.snork.co
+        - href: https://git.snork.co
           description: Self-hosted Git
           icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/gitea.png?raw=true
     - Plex:

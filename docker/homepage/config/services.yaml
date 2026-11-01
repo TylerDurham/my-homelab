@@ -25,6 +25,10 @@
         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/proxmox.png?raw=true 
 
 - AI:
+    - Open WebUI:
+         href: https://chat.snork.co
+         description: Homelab AI Chat
+         icon: https://github.com/TylerDurham/my-icons/blob/master/apps/services/open-webui.png?raw=true
     - ChatLLM Teams:
          href: https://apps.abacus.ai/chatllm/
          description: ChatLLM for Teams
